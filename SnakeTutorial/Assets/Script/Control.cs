@@ -17,6 +17,8 @@ public class Control : MonoBehaviour
     bool lost;
 
 
+    public GameObject Token;
+
     private void Start()
     {
         SnakeTransform = GetComponent<Transform>();
@@ -24,6 +26,12 @@ public class Control : MonoBehaviour
 
         location[snakeX, snakeY] = SnakeScore;
 
+        location[8, 4] = -1;
+
+        
+        GameObject go = Instantiate(Token) as GameObject;
+        go.transform.position = new Vector3(8, 4, 0);
+        go.name = "Token";
     }
 
 
@@ -98,10 +106,37 @@ public class Control : MonoBehaviour
                 //we eat an apple
                 if (location[snakeX, snakeY] == -1)
                 {
-                    SnakeScore++;
 
+                    GameObject DestroyToken = GameObject.Find("Token");
+                    Destroy(DestroyToken);
+                    SnakeScore++;
+                    
+                    for (int i = 0; i < location.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < location.GetLength(1); j++)
+                        {
+                            if(location[i,j] > 0)
+                            {
+                                location[i, j]++;
+                            }
+
+                        }
+
+                    }
                     //Create Apple
+
+                    int TokenX = UnityEngine.Random.Range(0, location.GetLength(0));
+                    int TokenY = UnityEngine.Random.Range(0, location.GetLength(1));
+
+                    location[TokenX, TokenY] = -1;
+
+                    GameObject obj = Instantiate(Token) as GameObject;
+                    obj.transform.position = new Vector3(TokenX, TokenY, 0);
+                    obj.name = "Token";
+
+
                 }
+
                 else if (location[snakeX, snakeY] != 0)
                 {
                     lost = true;
