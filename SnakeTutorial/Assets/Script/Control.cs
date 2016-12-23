@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Control : MonoBehaviour
@@ -19,8 +20,11 @@ public class Control : MonoBehaviour
 
     public GameObject Token;
 
+    public Text scoreText;
+
     private void Start()
     {
+        //Snake
         SnakeTransform = GetComponent<Transform>();
         direction = Vector3.right;
 
@@ -28,10 +32,13 @@ public class Control : MonoBehaviour
 
         location[8, 4] = -1;
 
-        
+        //Tokens
         GameObject go = Instantiate(Token) as GameObject;
         go.transform.position = new Vector3(8, 4, 0);
         go.name = "Token";
+
+        //Score
+        scoreText.text = "Score : " + SnakeScore.ToString();
     }
 
 
@@ -77,7 +84,7 @@ public class Control : MonoBehaviour
             go.name = snakeX.ToString() + snakeY.ToString();
 
             //Limits
-
+            //Controls Keyboard
             if(direction.x == 1)
             {
                 snakeX++;
@@ -95,6 +102,7 @@ public class Control : MonoBehaviour
                 snakeY--;
             }
 
+            //Game Manager
             if (snakeX > 9 || snakeX < 0 || snakeY > 9 || snakeY < 0)
             {
                 lost = true;
@@ -110,7 +118,8 @@ public class Control : MonoBehaviour
                     GameObject DestroyToken = GameObject.Find("Token");
                     Destroy(DestroyToken);
                     SnakeScore++;
-                    
+                    scoreText.text = "Score : " + SnakeScore.ToString();
+
                     for (int i = 0; i < location.GetLength(0); i++)
                     {
                         for (int j = 0; j < location.GetLength(1); j++)
@@ -125,22 +134,31 @@ public class Control : MonoBehaviour
                     }
                     //Create Apple
 
-                    int TokenX = UnityEngine.Random.Range(0, location.GetLength(0));
-                    int TokenY = UnityEngine.Random.Range(0, location.GetLength(1));
+                    bool applecreated = false;
+                    while (!applecreated)
+                    {
 
-                    location[TokenX, TokenY] = -1;
 
-                    GameObject obj = Instantiate(Token) as GameObject;
-                    obj.transform.position = new Vector3(TokenX, TokenY, 0);
-                    obj.name = "Token";
+                        int TokenX = UnityEngine.Random.Range(0, location.GetLength(0));
+                        int TokenY = UnityEngine.Random.Range(0, location.GetLength(1));
 
+                        if (location[TokenX, TokenY] == 0)
+                        { 
+                            location[TokenX, TokenY] = -1;
+                            GameObject obj = Instantiate(Token) as GameObject;
+                            obj.transform.position = new Vector3(TokenX, TokenY, 0);
+                            obj.name = "Token";
+
+                            applecreated = true;
+                        }
+                    }
 
                 }
 
                 else if (location[snakeX, snakeY] != 0)
                 {
                     lost = true;
-                    Debug.Log("You lost");
+                    scoreText.text = "YOU LOST";
                     return;
                 }
 
