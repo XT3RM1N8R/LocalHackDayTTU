@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Control.cs" />
+    <Compile Include="Assets\Script\GoToMenu.cs" />
     <Compile Include="Assets\Script\MainMenu.cs" />
     <Compile Include="Assets\Script\Rotation.cs" />
   </ItemGroup>
